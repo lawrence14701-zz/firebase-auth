@@ -3,26 +3,22 @@ import { Card, Form, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
-function Signup() {
+function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { signup } = useAuth();
+  const { login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (passwordConfirmRef.current.value !== passwordRef.current.value) {
-      return setError("Passwords do not match");
-    }
     try {
       setError("");
       //prevent user from clicking submit button mutiple times and creating mutiple accounts
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+      await login(emailRef.current.value, passwordRef.current.value);
     } catch {
-      setError("Failed to create an account");
+      setError("Failed to sign in");
     }
     setLoading(false);
   }
@@ -31,7 +27,7 @@ function Signup() {
     <>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
+          <h2 className="text-center mb-4">Login</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
@@ -42,21 +38,17 @@ function Signup() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Form.Group id="password-confirm">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
-            </Form.Group>
             <Button disabled={loading} className="w-100" type="submit">
-              Sign Up
+              Login
             </Button>
           </Form>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Already have an account? <Link to="/login">Log In</Link>
+        Need an account? <Link to="/signup">Sign Up</Link>
       </div>
     </>
   );
 }
 
-export default Signup;
+export default Login;
