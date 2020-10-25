@@ -14,9 +14,11 @@ export function AuthProvider({ children }) {
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
   }
+
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
   }
+
   function logout() {
     return auth.signOut();
   }
@@ -27,7 +29,18 @@ export function AuthProvider({ children }) {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       //make sure we don't render any of our app until we have current user set
       setLoading(false);
-      setCurrentUser(user);
+      console.log(user);
+      console.log(user);
+      if (user.emailVerified) {
+        console.log("Email is verified");
+        setCurrentUser(user);
+      } else {
+        const actionCodeSettings = {
+          url: "http://localhost:3000/login/" + auth.currentUser.email,
+          handleCodeInApp: false,
+        };
+        auth.currentUser.sendEmailVerification(actionCodeSettings);
+      }
     });
     //whenever we unmount the auth change listener unsubscribes.
     return unsubscribe;

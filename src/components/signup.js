@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 function Signup() {
   const emailRef = useRef();
@@ -9,7 +9,9 @@ function Signup() {
   const passwordConfirmRef = useRef();
   const { signup } = useAuth();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState("");
+  const history = useHistory();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,6 +23,10 @@ function Signup() {
       //prevent user from clicking submit button mutiple times and creating mutiple accounts
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
+      setSuccess(
+        "An verification link has been sent to your email, please verify before continuing"
+      );
+      // history.push("/");
     } catch {
       setError("Failed to create an account");
     }
@@ -33,6 +39,7 @@ function Signup() {
         <Card.Body>
           <h2 className="text-center mb-4">Sign Up</h2>
           {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>

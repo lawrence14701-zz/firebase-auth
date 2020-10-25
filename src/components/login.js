@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
   const history = useHistory();
@@ -17,6 +17,10 @@ function Login() {
       setError("");
       //prevent user from clicking submit button mutiple times and creating mutiple accounts
       setLoading(true);
+      if (!currentUser.emailVerified) {
+        setError("Email is not verified, please check your inbox to verify");
+        return;
+      }
       await login(emailRef.current.value, passwordRef.current.value);
       history.push("/");
     } catch {
