@@ -9,12 +9,15 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
+  const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
   }
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      //make sure we don't render any of our app until we have current user set
+      setLoading(false);
       setCurrentUser(user);
     });
     //whenever we unmount the auth change listener unsubscribes.
@@ -25,5 +28,9 @@ export function AuthProvider({ children }) {
     currentUser,
     signup,
   };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
