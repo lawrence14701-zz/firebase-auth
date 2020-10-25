@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import GoogleButton from "./GoogleAuth";
 
 function Signup() {
   const emailRef = useRef();
@@ -11,7 +12,6 @@ function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState("");
-  const history = useHistory();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -26,7 +26,6 @@ function Signup() {
       setSuccess(
         "An verification link has been sent to your email, please verify before continuing"
       );
-      // history.push("/");
     } catch {
       setError("Failed to create an account");
     }
@@ -58,6 +57,7 @@ function Signup() {
             </Button>
           </Form>
         </Card.Body>
+        <GoogleButton />
       </Card>
       <div className="w-100 text-center mt-2">
         Already have an account? <Link to="/login">Log In</Link>
